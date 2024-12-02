@@ -2,3 +2,10 @@ parsing
 	1 - split()
 	2 - replace()
 	3 - read into a buffer
+
+indexing
+	AoC uses 1 indexing. An object of index n could be (n + 1)th object. If the answer is wrong, try the other.
+
+assertions
+	unreachable code
+	impossible if case
