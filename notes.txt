@@ -1,0 +1,4 @@
+parsing
+	1 - split()
+	2 - replace()
+	3 - read into a buffer
