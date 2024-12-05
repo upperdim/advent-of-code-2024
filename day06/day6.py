@@ -1,0 +1,25 @@
+# Advent of Code 2024 - Day 6
+
+
+def parse_input():
+	with open('day5_input.txt', encoding="utf8") as f:
+		lines = [line.strip() for line in f.readlines()]
+	return lines
+
+
+def part1(rules, page_updates):
+	pass
+
+
+def part2(rules, page_updates):
+	pass
+
+
+def main():
+	lines = parse_input()
+	part1(lines)
+	part2(lines)
+
+
+if __name__ == '__main__':
+	main()
