@@ -2,7 +2,7 @@
 
 
 def parse_input():
-	with open('day5_input.txt', encoding="utf8") as f:
+	with open('day6_test.txt', encoding="utf8") as f:
 		lines = [line.strip() for line in f.readlines()]
 	return lines
 
