@@ -1,4 +1,4 @@
-# Advent of Code 2024 - Day 8
+# Advent of Code 2024 - Day 9
 
 
 def parse_input():
