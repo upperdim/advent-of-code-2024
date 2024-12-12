@@ -77,7 +77,10 @@ def part1(grid):
 #   region, 
 #   area, 
 #   sides = {
-#     'u'= [ (r,c) , ...]
+#     'u'= [ (r,c) , ...],
+#     'd'= [ (r,c) , ...],
+#     'l'= [ (r,c) , ...],
+#     'r'= [ (r,c) , ...]
 #   }
 # ]
 p2_region_area_sides = []
