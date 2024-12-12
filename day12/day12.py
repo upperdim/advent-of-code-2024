@@ -2,6 +2,7 @@
 
 
 import pprint
+from itertools import groupby
 
 
 def parse_input():
@@ -83,6 +84,55 @@ p2_region_area_sides = []
 p2_idx = 0
 
 
+def count_horiz_sides(edges_arr):
+	# Group tuples by their first element (x)
+	groups = {key: [y for _, y in group] for key, group in groupby(edges_arr, key=lambda x: x[0])}
+
+	# Calculate the total number of continuous sequences
+	total_sequences = 0
+	for ys in groups.values():
+		sequences = 0
+		in_sequence = False
+
+		for i in range(1, len(ys)):
+			if ys[i] == ys[i - 1] + 1:  # Continuation of a sequence
+				if not in_sequence:
+					sequences += 1
+					in_sequence = True
+			else:
+				in_sequence = False  # Break in the sequence
+
+		if len(ys) > 0 and not in_sequence:
+			sequences += 1  # Account for single numbers as sequences
+
+		total_sequences += sequences
+	return total_sequences
+
+def count_vert_sides(edges_arr):
+    # Group tuples by their second element (y)
+    groups = {key: [x for x, _ in group] for key, group in groupby(edges_arr, key=lambda x: x[1])}
+
+    # Calculate the total number of continuous sequences
+    total_sequences = 0
+    for xs in groups.values():
+        sequences = 0
+        in_sequence = False
+
+        for i in range(1, len(xs)):
+            if xs[i] == xs[i - 1] + 1:  # Continuation of a sequence
+                if not in_sequence:
+                    sequences += 1
+                    in_sequence = True
+            else:
+                in_sequence = False  # Break in the sequence
+
+        if len(xs) > 0 and not in_sequence:
+            sequences += 1  # Account for single numbers as sequences
+
+        total_sequences += sequences
+    return total_sequences
+
+
 def get_side(grid, r, c):
 	if r == 0:              return 'u'
 	if r == len(grid)-1:    return 'd'
@@ -161,70 +211,37 @@ def part2(grid):
 			region_sides_map['u'] = sorted(region_sides_map['u'], key=lambda x: (x[0], x[1]))
 			print('sorted up sides =', end='')
 			pprint.pp(region_sides_map['u'])
-			# for edge in region_sides_map['u']:
 			# It is a single side as long as it is continuous
-			for i in range(1, len(region_sides_map['u'])):
-				prev = region_sides_map['u'][i - 1]
-				curr = region_sides_map['u'][i]
-				print(f'prev = {prev} , curr = {curr}')
-				if prev[0] == curr[0] and prev[1]+1 == curr[1]:
-					continue
-				else:
-					print(f'side!')
-					count += 1
-			if len(region_sides_map['u']) >= 2:
-				last = region_sides_map['u'][-1]
-				second_last = region_sides_map['u'][-2]
-				if second_last[0] != last[0] and second_last[1] != last[1]:
-					print(f'side (aftercheck)')
-					count += 1
-					
+			count += count_horiz_sides(region_sides_map['u'])			
 		print(f'found {count - before_count} sides')
 
+		before_count = count
 		if 'd' in region_sides_map.keys():
 			# Sort horizontal sides' edges by their row coordinates (same row coords near each other)
 			region_sides_map['d'] = sorted(region_sides_map['d'], key=lambda x: (x[0], x[1]))
-			for i in range(1, len(region_sides_map['d'])):
-				prev = region_sides_map['d'][i - 1]
-				curr = region_sides_map['d'][i]
-				if prev[0] == curr[0] or prev[1]+1 != curr[1]:
-					count += 1
-			if len(region_sides_map['d']) >= 2:
-				last = region_sides_map['d'][-1]
-				second_last = region_sides_map['d'][-2]
-				if second_last[0] != last[0] and second_last[1] != last[1]:
-					print(f'side (aftercheck)')
-					count += 1
+			print('sorted down sides =', end='')
+			pprint.pp(region_sides_map['d'])	
+			count += count_horiz_sides(region_sides_map['d'])
+		print(f'found {count - before_count} sides')
+		
 
+		before_count = count
 		if 'l' in region_sides_map.keys():
 			# Sort vertical sides' edges by their column coordinates (same col coords near each other)
 			region_sides_map['l'] = sorted(region_sides_map['l'], key=lambda x: (x[1], x[0]))
-			for i in range(1, len(region_sides_map['l'])):
-				prev = region_sides_map['l'][i - 1]
-				curr = region_sides_map['l'][i]
-				if prev[0]+1 == curr[0] or prev[1] != curr[1]:
-					count += 1
-			if len(region_sides_map['l']) >= 2:
-				last = region_sides_map['l'][-1]
-				second_last = region_sides_map['l'][-2]
-				if second_last[0] != last[0] and second_last[1] != last[1]:
-					print(f'side (aftercheck)')
-					count += 1
+			print('sorted left sides =', end='')
+			pprint.pp(region_sides_map['l'])
+			count += count_vert_sides(region_sides_map['l'])
+		print(f'found {count - before_count} sides')
 
+		before_count = count
 		if 'r' in region_sides_map.keys():
 			# Sort vertical sides' edges by their column coordinates (same col coords near each other)
 			region_sides_map['r'] = sorted(region_sides_map['r'], key=lambda x: (x[1], x[0]))
-			for i in range(1, len(region_sides_map['r'])):
-				prev = region_sides_map['r'][i - 1]
-				curr = region_sides_map['r'][i]
-				if prev[0]+1 == curr[0] or prev[1] != curr[1]:
-					count += 1
-			if len(region_sides_map['r']) >= 2:
-				last = region_sides_map['r'][-1]
-				second_last = region_sides_map['r'][-2]
-				if second_last[0] != last[0] and second_last[1] != last[1]:
-					print(f'side (aftercheck)')
-					count += 1
+			print('sorted right sides =', end='')
+			pprint.pp(region_sides_map['r'])
+			count += count_vert_sides(region_sides_map['r'])
+		print(f'found {count - before_count} sides')
 					
 		region_side_counts.append(count)
 
