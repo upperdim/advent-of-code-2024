@@ -158,8 +158,8 @@ def part2(grid):
 		# Iterate up facing edge cells, determine how many sides there are
 		if 'u' in region_sides_map.keys():
 			# Sort horizontal sides' edges by their row coordinates (same row coords near each other)
-			region_sides_map['u'] = sorted(region_sides_map['u'], key=lambda x: x[0])
-			print('sorted=', end='')
+			region_sides_map['u'] = sorted(region_sides_map['u'], key=lambda x: (x[0], x[1]))
+			print('sorted up sides =', end='')
 			pprint.pp(region_sides_map['u'])
 			# for edge in region_sides_map['u']:
 			# It is a single side as long as it is continuous
@@ -183,7 +183,7 @@ def part2(grid):
 
 		if 'd' in region_sides_map.keys():
 			# Sort horizontal sides' edges by their row coordinates (same row coords near each other)
-			region_sides_map['d'] = sorted(region_sides_map['d'], key=lambda x: x[0])
+			region_sides_map['d'] = sorted(region_sides_map['d'], key=lambda x: (x[0], x[1]))
 			for i in range(1, len(region_sides_map['d'])):
 				prev = region_sides_map['d'][i - 1]
 				curr = region_sides_map['d'][i]
@@ -198,7 +198,7 @@ def part2(grid):
 
 		if 'l' in region_sides_map.keys():
 			# Sort vertical sides' edges by their column coordinates (same col coords near each other)
-			region_sides_map['l'] = sorted(region_sides_map['l'], key=lambda x: x[1])
+			region_sides_map['l'] = sorted(region_sides_map['l'], key=lambda x: (x[1], x[0]))
 			for i in range(1, len(region_sides_map['l'])):
 				prev = region_sides_map['l'][i - 1]
 				curr = region_sides_map['l'][i]
@@ -213,7 +213,7 @@ def part2(grid):
 
 		if 'r' in region_sides_map.keys():
 			# Sort vertical sides' edges by their column coordinates (same col coords near each other)
-			region_sides_map['r'] = sorted(region_sides_map['r'], key=lambda x: x[1])
+			region_sides_map['r'] = sorted(region_sides_map['r'], key=lambda x: (x[1], x[0]))
 			for i in range(1, len(region_sides_map['r'])):
 				prev = region_sides_map['r'][i - 1]
 				curr = region_sides_map['r'][i]
