@@ -200,13 +200,11 @@ def part2(grid):
 			count += count_horiz_sides(region_sides_map['d'])
 		
 
-		before_count = count
 		if 'l' in region_sides_map.keys():
 			# Sort vertical sides' edges by their column coordinates (same col coords near each other)
 			region_sides_map['l'] = sorted(region_sides_map['l'], key=lambda x: (x[1], x[0]))
 			count += count_vert_sides(region_sides_map['l'])
 
-		before_count = count
 		if 'r' in region_sides_map.keys():
 			# Sort vertical sides' edges by their column coordinates (same col coords near each other)
 			region_sides_map['r'] = sorted(region_sides_map['r'], key=lambda x: (x[1], x[0]))
