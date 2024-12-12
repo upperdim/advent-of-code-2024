@@ -14,6 +14,7 @@ def parse_input():
 p1_region_area_perim = []
 p1_idx = 0
 
+
 def visit(grid, r, c, visited, prev_cell):
 	global p1_idx
 
@@ -51,16 +52,19 @@ def visit(grid, r, c, visited, prev_cell):
 		visit(grid,r,c+1,visited, curr_cell)
 	else:
 		p1_region_area_perim[p1_idx][2] += 1  # increase perim
+	
+	return curr_cell
 
 
 def part1(grid):
 	visited = set()
 	p1_region_area_perim.append([grid[0][0], 0, 0])
 
+	prev_cell = grid[0][0]
 	for r, row in enumerate(grid):
 		for c, ch in enumerate(row):
-			visit(grid, r,c, visited, grid[0][0])
-			
+			prev_cell = visit(grid, r,c, visited, prev_cell)
+
 	result = 0
 	for region in p1_region_area_perim:
 		# print(region)
