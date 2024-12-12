@@ -214,9 +214,6 @@ def part2(grid):
 					
 		region_side_counts.append(count)
 
-	# pprint.pp(p2_region_area_sides)
-	pprint.pp(region_side_counts)
-
 	result = 0
 	for i in range(len(p2_region_area_sides)):
 		res = p2_region_area_sides[i][1] * region_side_counts[i]
