@@ -133,18 +133,19 @@ def count_vert_sides(edges_arr):
     return total_sequences
 
 
-def get_side(grid, r, c):
-	if r == 0:              return 'u'
-	if r == len(grid)-1:    return 'd'
-	if c == 0:              return 'l'
-	if c == len(grid[0])-1: return 'r'
+def get_sides(grid, r, c):
+	apparent_in_sides = []
+	if r == 0:              apparent_in_sides.append('u')
+	if r == len(grid)-1:    apparent_in_sides.append('d')
+	if c == 0:              apparent_in_sides.append('l')
+	if c == len(grid[0])-1: apparent_in_sides.append('r')
 
 	curr_cell = grid[r][c]
-	if grid[r-1][c] != curr_cell: return 'u'
-	if grid[r+1][c] != curr_cell: return 'd'
-	if grid[r][c-1] != curr_cell: return 'l'
-	if grid[r][c+1] != curr_cell: return 'r'
-	return None
+	if r >= 1              and grid[r-1][c] != curr_cell: apparent_in_sides.append('u')
+	if r <= len(grid)-2    and grid[r+1][c] != curr_cell: apparent_in_sides.append('d')
+	if c >= 1              and grid[r][c-1] != curr_cell: apparent_in_sides.append('l')
+	if c <= len(grid[0])-2 and grid[r][c+1] != curr_cell: apparent_in_sides.append('r')
+	return apparent_in_sides
 
 
 def visit2(grid, r, c, visited, prev_cell):
@@ -162,12 +163,13 @@ def visit2(grid, r, c, visited, prev_cell):
 	p2_region_area_sides[p2_idx][1] += 1  # increase area
 
 	# For each region, keep cells of sides of each direction (u,d,l,r) in a map
-	side = get_side(grid,r,c)
-	if side != None:
-		if side in p2_region_area_sides[p2_idx][2]:
-			p2_region_area_sides[p2_idx][2][side].append((r,c))
-		else:
-			p2_region_area_sides[p2_idx][2][side] = [(r,c)]
+	apparent_in_sides = get_sides(grid,r,c)  # can be apparent in a corner, being in 2 sides
+	for side in apparent_in_sides:
+		if side != None:
+			if side in p2_region_area_sides[p2_idx][2]:
+				p2_region_area_sides[p2_idx][2][side].append((r,c))
+			else:
+				p2_region_area_sides[p2_idx][2][side] = [(r,c)]
 
 	# Up
 	if r >= 1 and grid[r-1][c] == curr_cell:
