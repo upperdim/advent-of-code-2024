@@ -33,7 +33,7 @@ def parse_input():
 	return a,b,c,p
 
 
-def sim_computer(a, b, c, p):
+def sim_computer(a, b, c, p, part2):
 	def get_combo_operand_val(operand):
 		if operand in [0,1,2,3]: 	return operand
 		elif operand == 4: 			return a
@@ -43,6 +43,7 @@ def sim_computer(a, b, c, p):
 
 	ip = 0
 	output = ''
+	part2_output_count = 0
 	while ip < len(p):
 		# Fetch
 		opcode = p[ip]
@@ -62,7 +63,11 @@ def sim_computer(a, b, c, p):
 		elif opcode == 4:
 			b = b ^ c
 		elif opcode == 5:
-			output += str(get_combo_operand_val(p[ip+1]) % 8)
+			output_num = get_combo_operand_val(p[ip+1]) % 8
+			if part2 and (part2_output_count >= len(p) or output_num != p[part2_output_count]):
+				return False
+			part2_output_count += 1
+			output += str(output_num)
 			output += ','
 		elif opcode == 6:
 			b = a // 2**get_combo_operand_val(p[ip+1])
@@ -75,12 +80,14 @@ def sim_computer(a, b, c, p):
 
 
 def part1(a,b,c,p):
-	print(sim_computer(a,b,c,p))
+	print(sim_computer(a,b,c,p, False))
 
 
 def part2(a,b,c,p):
 	b=c=0
 	
+	print(f'program = {p}')
+
 	a = 0
 	output_int_list = []
 	
@@ -89,14 +96,24 @@ def part2(a,b,c,p):
 		# a = 117440 # debug
 		if a % 1_000_000 == 0:
 			print(f'Checking for a = {a}...')
-		output = sim_computer(a,b,c,p)
+		output = sim_computer(a,b,c,p, True)
 		
-		output_int_list = []
-		for num_str in output.split(','):
-			if num_str != '':
-				output_int_list.append(int(num_str))
+		if output != False:
+			output_int_list = []
+			for num_str in output.split(','):
+				if num_str != '':
+					output_int_list.append(int(num_str))
 		# exit(0) # debug	
+	print(f'==========================================================')
+	print(f'')
+	print(f'')
+	print(f'')
 	print(f'p == output_int_list when a = {a}')
+	print(f'')
+	print(f'')
+	print(f'')
+	print(f'==========================================================')
+
 
 
 def main():
