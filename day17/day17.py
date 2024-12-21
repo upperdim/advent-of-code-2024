@@ -1,6 +1,9 @@
 # Advent of Code - Day 17
 
 
+from pprint import pp
+
+
 a = -1
 b = -1
 c = -1
@@ -33,7 +36,7 @@ def parse_input():
 	return a,b,c,p
 
 
-def sim_computer(a, b, c, p, part2):
+def sim_computer(a, b, c, p):
 	def get_combo_operand_val(operand):
 		if operand in [0,1,2,3]: 	return operand
 		elif operand == 4: 			return a
@@ -42,7 +45,7 @@ def sim_computer(a, b, c, p, part2):
 		elif operand == 7: 			raise Exception('operand 7 encountered!')
 
 	ip = 0
-	output = ''
+	output = []
 	part2_output_count = 0
 	while ip < len(p):
 		# Fetch
@@ -64,56 +67,44 @@ def sim_computer(a, b, c, p, part2):
 			b = b ^ c
 		elif opcode == 5:
 			output_num = get_combo_operand_val(p[ip+1]) % 8
-			if part2 and (part2_output_count >= len(p) or output_num != p[part2_output_count]):
-				return False
-			part2_output_count += 1
-			output += str(output_num)
-			output += ','
+			output.append(output_num)
 		elif opcode == 6:
 			b = a // 2**get_combo_operand_val(p[ip+1])
 		elif opcode == 7:
 			c = a // 2**get_combo_operand_val(p[ip+1])
 		ip += 2
-	if len(output) > 0:
-		output = output[:-1]
 	return output
 
 
 def part1(a,b,c,p):
-	print(sim_computer(a,b,c,p, False))
+	print(sim_computer(a,b,c,p))
 
 
 def part2(a,b,c,p):
 	b=c=0
-	
-	print(f'program = {p}')
 
-	a = 0
-	output_int_list = []
+	# Populate valid a's for the first output	
+	valids = []
+	for a in range(2**10):  # First 10 bits matter, later on 3 bits per output
+		if p[0] == sim_computer(a,b,c,p)[0]:
+			valids.append(a)
 	
-	while p != output_int_list:
-		a += 1
-		# a = 117440 # debug
-		if a % 1_000_000 == 0:
-			print(f'Checking for a = {a}...')
-		output = sim_computer(a,b,c,p, True)
-		
-		if output != False:
-			output_int_list = []
-			for num_str in output.split(','):
-				if num_str != '':
-					output_int_list.append(int(num_str))
-		# exit(0) # debug	
-	print(f'==========================================================')
-	print(f'')
-	print(f'')
-	print(f'')
-	print(f'p == output_int_list when a = {a}')
-	print(f'')
-	print(f'')
-	print(f'')
-	print(f'==========================================================')
-
+	# For each instruction in program
+	for i in range(1, len(p)):
+		curr_valids = []
+		# Filter valids for current instruction from valids of previous instruction 
+		for valid in valids:
+			# 3 bits of a is added per instruction
+			for bits in range(8):
+				# Append new bits to the left of a to obtain check_a
+				check_a = (bits << 7 + (i*3)) | valid
+				# Check it
+				out = sim_computer(check_a,b,c,p)
+				if len(out) > i and p[i] == out[i]:
+					curr_valids.append(check_a)  # Save if satisfies
+		# Filter valids only to ones that also satisfied this instruction
+		valids = curr_valids
+	print(min(valids))  # We want minimum a that satisfies
 
 
 def main():
