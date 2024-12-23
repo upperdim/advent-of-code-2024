@@ -63,6 +63,7 @@ def part1(grid):
 			dr = abs(c1r - c2r)
 			dc = abs(c1c - c2c)
 			dd = abs(c1d - c2d) - 2  # idk why my results are 2 larger...
+			# Future me: reason explained in Part 2 at the same place.
 
 			if dd>=100:
 				if dr==1 and dc==1:
@@ -130,7 +131,10 @@ def part2(grid):
 
 			dr = abs(c1r - c2r)
 			dc = abs(c1c - c2c)
-			dd = abs(c1d - c2d) - 2  # idk why my results are 2 larger...
+			dd = abs(c1d - c2d) - dr - dc
+			# Now I understand... We save distance with the shortcut,
+			# however navigating throught the cheat is also a cost of distance.
+			# So we deduct cheat navigation cost from distance saved.
 
 			if dd>=100:
 				if dr + dc <= 20:
