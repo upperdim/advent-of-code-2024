@@ -27,8 +27,28 @@ def part1(towels, patterns):
 	print(f'Possible = {possible_count}')
 
 
+possibility_counts = {}
+def get_possibility_count(pattern, towels):
+	if pattern in possibility_counts:
+		return possibility_counts[pattern]
+
+	possibility_count = 0
+	for towel in towels:
+		if pattern == towel:
+			possibility_count += 1
+		if towel == pattern[:len(towel)]:
+			possibility_count += get_possibility_count(pattern[len(towel):], towels)
+	
+	possibility_counts[pattern] = possibility_count
+	return possibility_count
+
+
 def part2(towels, patterns):
-	pass
+	total_possibility_count = 0
+	for pattern in patterns:
+		possibility_count = get_possibility_count(pattern, towels)
+		total_possibility_count += possibility_count
+	print(f'Total Possibility Count = {total_possibility_count}')
 
 
 def main():
