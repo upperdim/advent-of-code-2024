@@ -29,7 +29,54 @@ def part1(lines):
 
 
 def part2(lines):
-	pass
+	# Map of each computer holding a set of connected computers
+	conns = {}
+
+	edges = set()
+	for conn in lines:
+		c1,c2 = conn.split('-')
+		if c1 not in conns: conns[c1] = set()
+		if c2 not in conns: conns[c2] = set()
+		conns[c1].add(c2)
+		conns[c2].add(c1)
+		edges.add((c1,c2))
+		edges.add((c2,c1))
+
+	nodes = []
+	for conn in conns.keys():
+		nodes.append(conn)
+	nodes.sort()
+
+	# Schedule a visit starting from all nodes
+	to_visit = []
+	for node in nodes:
+		to_visit.append([node])
+
+	largest_node_chain = ()  # target, keep track of largest circle
+	while len(to_visit) > 0:
+		# Visited the node
+		curr_visit_node_chain = to_visit.pop()
+
+		# Update if current node chain is longer
+		if len(curr_visit_node_chain) > len(largest_node_chain):
+			largest_node_chain = curr_visit_node_chain
+
+		# Check all for eligible nodes to visit
+		for check_node in nodes:
+			if check_node > curr_visit_node_chain[-1]:
+				is_connected = True
+
+				# If it's not connected to any of the current chain, it's not an interconnection
+				for curr_chain_node in curr_visit_node_chain:
+					if (check_node, curr_chain_node) not in edges:
+						is_connected = False
+						break
+
+				# Add it to the current chain
+				if is_connected:
+					to_visit.append(curr_visit_node_chain + [check_node])  # Append to the end of the list
+	
+	print('Part 2 =', str(sorted(largest_node_chain)).replace('\'', '').replace(' ', '')[1:-1])
 
 
 def main():
