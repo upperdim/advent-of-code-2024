@@ -137,7 +137,7 @@ def part2(vals, gates):
 
 def main():
 	vals, gates = parse_input()
-	part1(vals, gates)
+	part1(vals.copy(), gates.copy())
 	part2(vals, gates)
 
 
