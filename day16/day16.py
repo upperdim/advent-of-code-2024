@@ -63,8 +63,97 @@ def part1(grid):
 		to_visit.sort(key=lambda x: x[1], reverse=True)
 
 
+def print_ans(soln_paths):
+	# Find min cost in the solution paths
+	min_cost = soln_paths[0][-1][2]
+	for soln_path in soln_paths:
+		if min_cost > soln_path[-1][2]:
+			min_cost = soln_path[-1][2]
+	
+	# Get a list of solution paths with the minimum cost
+	min_cost_paths = []
+	for soln_path in soln_paths:
+		if min_cost == soln_path[-1][2]:
+			min_cost_paths.append(soln_path)
+	
+	# Form a set of tiles of paths with the minimum cost
+	best_tiles = set()
+	for path in min_cost_paths:
+		for tile in path:
+			best_tiles.add(tile)
+	print(f'ans = {len(best_tiles)}')
+
+
 def part2(grid):
-	pass
+	sr = sc = er = ec = None
+	for r, row in enumerate(grid):
+		for c, ch in enumerate(row):
+			if   ch == 'S': sr, sc = r, c
+			elif ch == 'E': er, ec = r, c
+
+	soln_paths = []
+
+	# to_visit: Contains information of cells to visit:
+	# row:                       row    coord of the cell
+	# col:                       column coord of the cell
+	# cost:                      accumulated cost of ongoing traversal at this cell
+	# direction:                 direction at given cell
+	# path_history_list:         a coordinates and cost list containing the
+	#                            visited cells for the ongoing traversal (row, col, cost)
+	# visited_set_per_traversal: a coordinates set containing visited
+	#                            cells for the ongoing traversal
+	to_visit = [(sr,sc,0,'r',[(sr,sc, 0)], set())]
+	while len(to_visit) > 0:
+		# if len(to_visit) % 500 == 0:
+			# print(f'list len = {len(to_visit)}')
+
+		r, c, cost, direction, path, visited = to_visit.pop()
+		
+		if r == er and c == ec:
+			print(f'Found exit with cost {cost}')
+			soln_paths.append(path)
+			# print_ans(soln_paths)
+			continue
+		
+		if (r,c) in visited:
+			continue
+		visited.add((r,c))
+
+		for d in dir_offsets:
+			if direction == 'u' and d == 'd': continue
+			if direction == 'd' and d == 'u': continue
+			if direction == 'r' and d == 'l': continue
+			if direction == 'l' and d == 'r': continue
+			dr, dc = dir_offsets[d]
+			nr, nc = r+dr, c+dc
+			if grid[nr][nc] != "#":
+				if direction == d:
+					to_visit.append((nr, nc, cost+1,    d, path + [(nr, nc, cost+1)], visited.copy()))
+				else:
+					to_visit.append((nr, nc, cost+1001, d, path + [(nr, nc, cost+1001)], visited.copy()))
+		
+		# Sort descending on cost, wanna visit the lowest cost with pop()
+		to_visit.sort(key=lambda x: x[2], reverse=True)
+
+	# Find min cost in the solution paths
+	min_cost = soln_paths[0][-1][2]
+	for soln_path in soln_paths:
+		if min_cost > soln_path[-1][2]:
+			min_cost = soln_path[-1][2]
+	
+	# Get a list of solution paths with the minimum cost
+	min_cost_paths = []
+	for soln_path in soln_paths:
+		if min_cost == soln_path[-1][2]:
+			min_cost_paths.append(soln_path)
+	
+	# Form a set of tiles of paths with the minimum cost
+	best_tiles = set()
+	for path in min_cost_paths:
+		for tile in path:
+			best_tiles.add(tile)
+	
+	print(f'Part 2 = {len(best_tiles)}')
 
 
 def main():
